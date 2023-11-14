@@ -89,7 +89,7 @@ fun SplashScreen(navController: NavController) {
                     scaleY = scale.value,
                     translationY = offsetY.value - 150.dp.value
                 )
-                .size(400.dp)
+                .size(350.dp)
         )
 
         Image(
@@ -102,6 +102,7 @@ fun SplashScreen(navController: NavController) {
                     alpha = charactersAlpha.value,
                     translationY = 150.dp.value
                 )
+                .size(250.dp)
                 .align(Alignment.Center)
         )
 
