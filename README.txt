@@ -20,10 +20,6 @@ A well planned architecture is extremely important for an app to scale and all a
 
 Clean architecture was proposed by Robert C. Martin in 2012 in the Clean Code Blog and it follow the SOLID principle.
 
-Clean Architecture Diagram
-
-Clean Architecture Diagram
-
 The circles represent different layers of your app. Note that:
 
 The center circle is the most abstract, and the outer circle is the most concrete. This is called the Abstraction Principle. The Abstraction Principle specifies that inner circles should contain business logic, and outer circles should contain implementation details.
