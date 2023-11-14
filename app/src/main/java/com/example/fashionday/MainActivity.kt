@@ -37,16 +37,15 @@ class MainActivity :
             }
         }
     }
-
 }
 
 @Composable
 fun NavigationGraph() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "splash") {
+    NavHost(navController = navController, startDestination = "main") {
         composable("splash") { SplashScreen(navController) }
-        composable("main") { MainScreen() }
+        composable("main") { MainScreen(navController = navController) }
         composable("favorite") { FavoritesScreen() }
         composable("details/{id}") { backStackEntry ->
             DetailsScreen(backStackEntry.arguments?.getString("id") ?: "")

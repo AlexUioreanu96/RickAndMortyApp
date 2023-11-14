@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,6 +27,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.fashionday.R
@@ -46,18 +49,20 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
+fun MainScreen(viewModel: MainViewModel = hiltViewModel(), navController: NavController) {
     val colors = MaterialTheme.colorScheme
     val dimensions = LocalDimensions.current
     val typography = MaterialTheme.typography
 
-    val uiState = viewModel.uiState.value
+    val uiState by viewModel.uiState
 
     val pullRefreshState = rememberSwipeRefreshState(isRefreshing = uiState.isLoading)
 
-    Scaffold(modifier = Modifier
-        .fillMaxSize()
-        .padding(dimensions.spaceMd),
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+            .padding(dimensions.spaceMd),
         topBar = {
             Box(
                 modifier = Modifier
@@ -70,33 +75,13 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
                     contentDescription = ""
                 )
             }
-        }) { contentPadding ->
+        },
+        containerColor = Color.Black,
+        contentColor = Color.Black
+    ) { contentPadding ->
 
         Column(modifier = Modifier.padding(contentPadding)) {
-
-            OutlinedTextField(
-                value = uiState.searchQuery ?: "",
-                onValueChange = viewModel::onQueryChanged,
-                label = { Text("Search Characters") },
-                leadingIcon = {
-                    Icon(
-                        tint = Color(0x51206D0E),
-                        painter = painterResource(id = R.drawable.ic_character),
-                        contentDescription = ""
-                    )
-                },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    unfocusedBorderColor = Color(0xAB206D0E), // Replace with your desired color value
-                    focusedBorderColor = Color(0xAB206D0E),
-                    unfocusedLabelColor = Color(0xAB206D0E),
-                    focusedLabelColor = Color(0xAB206D0E)
-                ),
-                singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            )
-
+            SearchBar(uiState, viewModel)
             CharactersGrid(
                 characters = uiState.filteredCharacters,
                 onItemLongPressed = { characterId ->
@@ -104,15 +89,42 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
                 },
                 pullRefreshState = pullRefreshState,
                 onRefresh = viewModel::fetchCharacters,
+                onItemPressed = { navController.navigate("details/$it") }
             )
         }
     }
 }
 
 @Composable
-fun CharacterSearchBar(viewModel: MainViewModel) {
-
-
+@OptIn(ExperimentalMaterial3Api::class)
+private fun SearchBar(
+    uiState: CharacterUiState,
+    viewModel: MainViewModel
+) {
+    val searchBarColor = Color(0xFF449E2F)
+    OutlinedTextField(
+        value = uiState.searchQuery ?: "",
+        onValueChange = viewModel::onQueryChanged,
+        label = { Text("Search Characters") },
+        leadingIcon = {
+            Icon(
+                tint = searchBarColor,
+                painter = painterResource(id = R.drawable.ic_character),
+                contentDescription = ""
+            )
+        },
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            unfocusedBorderColor = searchBarColor,
+            focusedBorderColor = searchBarColor,
+            unfocusedLabelColor = searchBarColor,
+            focusedLabelColor = searchBarColor
+        ),
+        singleLine = true,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp, bottom = 16.dp),
+        shape = RoundedCornerShape(100)
+    )
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -120,6 +132,7 @@ fun CharacterSearchBar(viewModel: MainViewModel) {
 fun CharactersGrid(
     characters: List<Character>,
     onItemLongPressed: (Int) -> Unit,
+    onItemPressed: (Int) -> Unit,
     pullRefreshState: SwipeRefreshState,
     onRefresh: () -> Unit,
 ) {
@@ -140,7 +153,8 @@ fun CharactersGrid(
                     status = character.status ?: "",
                     species = character.species ?: "",
                     origin = character.origin ?: "",
-                    onItemLongPressed = { onItemLongPressed(character.id ?: -1) })
+                    onItemLongPressed = { onItemLongPressed(character.id ?: -1) },
+                    onItemPressed = { onItemPressed(character.id ?: -1) })
             }
         }
     }
@@ -153,8 +167,9 @@ fun CharacterItem(
     urlImage: String?,
     status: String,
     species: String,
-    onItemLongPressed: () -> Unit = {},
     origin: String,
+    onItemLongPressed: () -> Unit = {},
+    onItemPressed: () -> Unit = {}
 ) {
     val dimensions = LocalDimensions.current
 
@@ -162,7 +177,7 @@ fun CharacterItem(
         modifier = Modifier
             .fillMaxWidth()
             .combinedClickable(
-                onClick = { },
+                onClick = { onItemPressed() },
                 onLongClick = { onItemLongPressed() }
             ),
         elevation = CardDefaults.elevatedCardElevation(dimensions.spaceXxs)
@@ -190,7 +205,7 @@ fun CharacterItem(
                     .padding(LocalDimensions.current.spaceSm),
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
             Row(
                 modifier = Modifier.padding(LocalDimensions.current.spaceSm),

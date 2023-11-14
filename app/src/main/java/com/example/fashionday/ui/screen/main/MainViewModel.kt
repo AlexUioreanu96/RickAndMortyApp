@@ -20,8 +20,8 @@ data class CharacterUiState(
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    val fetchCharactersUseCase: FetchAllCharactersUseCase,
-    val getCharacterUseCase: GetCharacterUseCase
+    private val fetchCharactersUseCase: FetchAllCharactersUseCase,
+    private val getCharacterUseCase: GetCharacterUseCase
 
 ) : ViewModel() {
 
