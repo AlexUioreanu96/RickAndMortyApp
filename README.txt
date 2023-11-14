@@ -81,4 +81,42 @@ Data Source: Responsible for deciding which data source (network or cache) will 
 3. Presentation.
 The presentation layer contains components involved in showing information to the user. The main part of this layer are the views(activity) and viewmodels.
 
-![alt text](https://github.com/ndiritumichael/Rick-and-Morty-Compose/blob/master/assets/architecturecircles.png)
+
+
+Libraries.
+Hilt - Dependency Injection library.
+
+Jetpack
+
+Android KTX - Provide concise, idiomatic Kotlin to Jetpack and Android platform APIs.
+
+Jetpack Compose - Jetpack Compose is Android’s modern toolkit for building native UI. It simplifies and accelerates UI development on Android.
+
+AndroidX - Major improvement to the original Android Support Library, which is no longer maintained.
+
+Lifecycle - Perform actions in response to a change in the lifecycle status of another component, such as activities and fragments.
+
+ViewModel - Designed to store and manage UI-related data in a lifecycle conscious way. The ViewModel class allows data to survive configuration changes such as screen rotations.
+
+Compose Navigation -Component that allows easier implementation of navigation from composables.
+
+Retrofit - Type-safe http client and supports coroutines out of the box.
+
+OkHttp-Logging-Interceptor - Logs HTTP request and response data.
+
+Coroutines - Library Support for coroutines.
+
+Flow - Flows are built on top of coroutines and can provide multiple values. A flow is conceptually a stream of data that can be computed asynchronously.
+
+Square/Logcat -Library for easier logging.
+
+Material Design - Build awesome beautiful UIs.
+
+Glide - Jetpack Compose image loading library which fetches and displays network images with Glide, Coil, and Fresco.
+
+kotlinx.coroutines - Library Support for coroutines,provides runBlocking coroutine builder used in tests.
+
+Compose-Accompanist -Accompanist is a group of libraries that aim to supplement Jetpack Compose with features that are commonly required by developers but not yet available.
+
+Navigation Animation A library which provides Compose Animation support for Jetpack Navigation Compose.
+System UI Controller System UI Controller provides easy-to-use utilities for updating the System UI bar colors within Jetpack Compose.
