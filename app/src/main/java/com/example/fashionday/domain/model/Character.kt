@@ -1,4 +1,4 @@
-package com.example.fashionday.domain.usecase
+package com.example.fashionday.domain.model
 
 data class Character(
     val id: Int? = null,
@@ -7,5 +7,6 @@ data class Character(
     val species: String? = null,
     val name: String? = null,
     val type: String? = null,
-    val status: String? = null
+    val status: String? = null,
+    val origin: String? = null
 )

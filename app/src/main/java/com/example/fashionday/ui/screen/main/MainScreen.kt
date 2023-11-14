@@ -1,37 +1,44 @@
 package com.example.fashionday.ui.screen.main
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.border
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.example.fashionday.R
+import com.example.fashionday.domain.model.Character
 import com.example.fashionday.ui.theme.LocalDimensions
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshState
@@ -44,10 +51,9 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
     val dimensions = LocalDimensions.current
     val typography = MaterialTheme.typography
 
-    val uiState = viewModel.uiState.collectAsState().value
+    val uiState = viewModel.uiState.value
 
-
-    val pullRefreshState = rememberSwipeRefreshState(isRefreshing = true)
+    val pullRefreshState = rememberSwipeRefreshState(isRefreshing = uiState.isLoading)
 
     Scaffold(modifier = Modifier
         .fillMaxSize()
@@ -56,94 +62,118 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .border(
-                        width = 1.dp,
-                        color = colors.primary,
-                        shape = RoundedCornerShape(
-                            dimensions.spaceXs
-                        )
-                    )
                     .padding(dimensions.spaceMd),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = "Fashion Days",
-                    style = typography.headlineLarge.copy(
-                        fontWeight = FontWeight.SemiBold,
-                        color = colors.primary
-                    )
+                Image(
+                    painter = painterResource(id = R.drawable.rick_and_morty),
+                    contentDescription = ""
                 )
             }
         }) { contentPadding ->
-        Surface(
-            modifier = Modifier
-                .padding(contentPadding)
-                .fillMaxSize()
-        ) {
-//            ProductGrid(
-//                products = uiState.characters,
-//                onItemLongPressed = { productId ->
-//                    viewModel.deleteItemOnLongPressed(productId)
-//                },
-//                pullRefreshState = pullRefreshState,
-//                onRefresh = viewModel::fetchCharacters
-//            )
+
+        Column(modifier = Modifier.padding(contentPadding)) {
+
+            OutlinedTextField(
+                value = uiState.searchQuery ?: "",
+                onValueChange = viewModel::onQueryChanged,
+                label = { Text("Search Characters") },
+                leadingIcon = {
+                    Icon(
+                        tint = Color(0x51206D0E),
+                        painter = painterResource(id = R.drawable.ic_character),
+                        contentDescription = ""
+                    )
+                },
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    unfocusedBorderColor = Color(0xAB206D0E), // Replace with your desired color value
+                    focusedBorderColor = Color(0xAB206D0E),
+                    unfocusedLabelColor = Color(0xAB206D0E),
+                    focusedLabelColor = Color(0xAB206D0E)
+                ),
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            )
+
+            CharactersGrid(
+                characters = uiState.filteredCharacters,
+                onItemLongPressed = { characterId ->
+                    viewModel.deleteItemOnLongPressed(characterId)
+                },
+                pullRefreshState = pullRefreshState,
+                onRefresh = viewModel::fetchCharacters,
+            )
         }
     }
 }
 
-//@Composable
-//fun ProductGrid(
-//    products: List<Product>,
-//    onItemLongPressed: (Int) -> Unit,
-//    pullRefreshState: SwipeRefreshState,
-//    onRefresh: () -> Unit
-//) {
-//    val scrollState = rememberLazyGridState()
-//    val dimensions = LocalDimensions.current
-//
-//    SwipeRefresh(state = pullRefreshState, onRefresh = onRefresh) {
-//        LazyVerticalGrid(
-//            state = scrollState,
-//            columns = GridCells.Fixed(2),
-//            modifier = Modifier
-//                .padding(top = dimensions.spaceXs)
-//                .fillMaxSize()
-//        ) {
-//            items(products) { product ->
-//                ProductItem(
-//                    productName = product.productName,
-//                    productBrand = product.productBrand,
-//                    urlImage = product.productImages.thumb?.get(0),
-//                    onItemLongPressed = { onItemLongPressed(product.productId) }
-//                )
-//            }
-//        }
-//    }
-//}
+@Composable
+fun CharacterSearchBar(viewModel: MainViewModel) {
+
+
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun CharactersGrid(
+    characters: List<Character>,
+    onItemLongPressed: (Int) -> Unit,
+    pullRefreshState: SwipeRefreshState,
+    onRefresh: () -> Unit,
+) {
+    val scrollState = rememberLazyStaggeredGridState()
+    val dimensions = LocalDimensions.current
+
+    SwipeRefresh(state = pullRefreshState, onRefresh = onRefresh) {
+        LazyVerticalStaggeredGrid(
+            verticalItemSpacing = dimensions.spaceSm,
+            horizontalArrangement = Arrangement.spacedBy(dimensions.spaceSm),
+            state = scrollState,
+            columns = StaggeredGridCells.Fixed(2),
+        ) {
+            items(characters, key = { it.id ?: -1 }) { character ->
+                CharacterItem(
+                    characterName = character.name ?: "",
+                    urlImage = character.image,
+                    status = character.status ?: "",
+                    species = character.species ?: "",
+                    origin = character.origin ?: "",
+                    onItemLongPressed = { onItemLongPressed(character.id ?: -1) })
+            }
+        }
+    }
+}
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalGlideComposeApi::class)
 @Composable
-fun ProductItem(
-    productName: String,
-    productBrand: String,
+fun CharacterItem(
+    characterName: String,
     urlImage: String?,
+    status: String,
+    species: String,
     onItemLongPressed: () -> Unit = {},
+    origin: String,
 ) {
     val dimensions = LocalDimensions.current
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(dimensions.spaceXs)
-            .height(350.dp)
             .combinedClickable(
                 onClick = { },
                 onLongClick = { onItemLongPressed() }
             ),
         elevation = CardDefaults.elevatedCardElevation(dimensions.spaceXxs)
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier = Modifier
+                .background(Color(0x51206D0E))
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
             urlImage?.let {
                 GlideImage(
                     model = urlImage,
@@ -151,26 +181,63 @@ fun ProductItem(
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(220.dp)
+                        .height(250.dp)
                 )
             }
             Text(
-                text = productBrand,
+                text = characterName,
                 modifier = Modifier
                     .padding(LocalDimensions.current.spaceSm),
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
                 textAlign = TextAlign.Center
             )
-            Text(
-                text = productName,
-                modifier = Modifier
-                    .padding(LocalDimensions.current.spaceSm),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface,
-                textAlign = TextAlign.Center
-            )
+            Row(
+                modifier = Modifier.padding(LocalDimensions.current.spaceSm),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.green_dot),
+                    contentDescription = "",
+                    tint = when (status) {
+                        "Alive" -> Color.Green
+                        "Dead" -> Color.Red
+                        else -> Color.Black
+                    }
+                )
+                Text(
+                    text = "$status - $species",
+                    modifier = Modifier.padding(start = dimensions.spaceSm),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center
+                )
+            }
+            if (origin != "unknown")
+                Text(
+                    text = origin,
+                    modifier = Modifier.padding(dimensions.spaceSm),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center
+                )
+
         }
     }
 }
+
+
+//@Preview(showBackground = true, backgroundColor = 0xFFFFFF)
+//@Composable
+//fun CharacterItemPreview() {
+//    // Replace with your theme if you have a custom theme
+//    MaterialTheme {
+//        CharacterItem(
+//            characterName = "Sample Character",
+//            characterBrand = "Sample Brand",
+//            urlImage = "Your local drawable or placeholder image",
+//            onItemLongPressed = {}
+//        )
+//    }
+//}
 

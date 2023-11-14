@@ -10,8 +10,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-interface PlaceModule {
-
+interface CharacterModule {
     @Singleton
     @Binds
     fun bindPlaceRepository(repository: CharactersRepositoryImpl): CharactersRepository
