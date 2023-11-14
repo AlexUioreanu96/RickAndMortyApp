@@ -105,7 +105,7 @@ private fun SearchBar(
     OutlinedTextField(
         value = uiState.searchQuery ?: "",
         onValueChange = viewModel::onQueryChanged,
-        label = { Text("Search Characters") },
+        label = { Text("Search Characters", color = searchBarColor) },
         leadingIcon = {
             Icon(
                 tint = searchBarColor,
@@ -114,6 +114,7 @@ private fun SearchBar(
             )
         },
         colors = TextFieldDefaults.outlinedTextFieldColors(
+            textColor = searchBarColor,
             unfocusedBorderColor = searchBarColor,
             focusedBorderColor = searchBarColor,
             unfocusedLabelColor = searchBarColor,
@@ -240,19 +241,3 @@ fun CharacterItem(
         }
     }
 }
-
-
-//@Preview(showBackground = true, backgroundColor = 0xFFFFFF)
-//@Composable
-//fun CharacterItemPreview() {
-//    // Replace with your theme if you have a custom theme
-//    MaterialTheme {
-//        CharacterItem(
-//            characterName = "Sample Character",
-//            characterBrand = "Sample Brand",
-//            urlImage = "Your local drawable or placeholder image",
-//            onItemLongPressed = {}
-//        )
-//    }
-//}
-

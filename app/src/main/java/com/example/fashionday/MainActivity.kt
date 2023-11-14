@@ -43,7 +43,7 @@ class MainActivity :
 fun NavigationGraph() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "main") {
+    NavHost(navController = navController, startDestination = "splash") {
         composable("splash") { SplashScreen(navController) }
         composable("main") { MainScreen(navController = navController) }
         composable("favorite") { FavoritesScreen() }

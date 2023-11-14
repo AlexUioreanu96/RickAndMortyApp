@@ -67,6 +67,7 @@ fun DetailsScreen(id: String, viewModel: DetailsViewModel = hiltViewModel()) {
             color = Color.White,
             fontStyle = FontStyle.Normal,
             fontWeight = FontWeight.SemiBold,
+            style = MaterialTheme.typography.titleLarge,
             fontSize = 35.sp,
         )
 
@@ -87,7 +88,7 @@ fun DetailsScreen(id: String, viewModel: DetailsViewModel = hiltViewModel()) {
                 text = uiState.character?.status ?: "",
                 modifier = Modifier.padding(start = dimensions.spaceSm),
                 color = Color.White,
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.Center
             )
         }
@@ -107,6 +108,7 @@ fun DetailsScreen(id: String, viewModel: DetailsViewModel = hiltViewModel()) {
                     color = Color.White,
                     fontStyle = FontStyle.Normal,
                     fontWeight = FontWeight.SemiBold,
+                    style = MaterialTheme.typography.bodyLarge,
                     fontSize = 35.sp,
                 )
                 Text(
@@ -116,6 +118,7 @@ fun DetailsScreen(id: String, viewModel: DetailsViewModel = hiltViewModel()) {
                     color = Color.White,
                     fontStyle = FontStyle.Normal,
                     fontWeight = FontWeight.ExtraLight,
+                    style = MaterialTheme.typography.bodySmall,
                     fontSize = 20.sp,
                 )
 
@@ -131,6 +134,7 @@ fun DetailsScreen(id: String, viewModel: DetailsViewModel = hiltViewModel()) {
                     color = Color.White,
                     fontStyle = FontStyle.Normal,
                     fontWeight = FontWeight.SemiBold,
+                    style = MaterialTheme.typography.bodyLarge,
                     fontSize = 35.sp,
                 )
                 Text(
@@ -140,6 +144,7 @@ fun DetailsScreen(id: String, viewModel: DetailsViewModel = hiltViewModel()) {
                     color = Color.White,
                     fontStyle = FontStyle.Normal,
                     fontWeight = FontWeight.ExtraLight,
+                    style = MaterialTheme.typography.bodySmall,
                     fontSize = 20.sp,
                 )
             }
@@ -151,6 +156,7 @@ fun DetailsScreen(id: String, viewModel: DetailsViewModel = hiltViewModel()) {
             color = Color.White,
             fontStyle = FontStyle.Normal,
             fontWeight = FontWeight.SemiBold,
+            style = MaterialTheme.typography.bodyLarge,
             fontSize = 35.sp,
         )
         Text(
@@ -160,6 +166,7 @@ fun DetailsScreen(id: String, viewModel: DetailsViewModel = hiltViewModel()) {
             color = Color.White,
             fontStyle = FontStyle.Normal,
             fontWeight = FontWeight.ExtraLight,
+            style = MaterialTheme.typography.bodySmall,
             fontSize = 23.sp,
         )
     }
